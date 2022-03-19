@@ -258,5 +258,30 @@ class ViewController: UIViewController, EasyTipViewDelegate {
         self.buttonB.backgroundColor = color
         self.smallContainerView.backgroundColor = color
     }
+    
+//    func showToolTip(withText text: String) {
+//        var preferences = EasyTipView.globalPreferences
+//        
+//        preferences.drawing.backgroundColor = .white
+//        preferences.drawing.shadowColor = .black
+//        preferences.drawing.foregroundColor = .gray
+//        preferences.drawing.shadowRadius = 2
+//        preferences.drawing.shadowOpacity = 0.35
+//        preferences.drawing.arrowPosition = .bottom
+//        preferences.animating.dismissDuration = 0
+//     
+//        let tip = EasyTipView(text: text,
+//                              preferences: preferences,
+//                              delegate: self)
+//        
+//        if tipView == nil {
+//            tipView = tip
+//            tip.show(forView: self.textfield)
+//        } else {
+//            tipView?.updateText(text)
+//        }
+//        
+//    }
+    
 }
 

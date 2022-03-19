@@ -311,18 +311,15 @@ open class EasyTipView: UIView {
     fileprivate weak var delegate: EasyTipViewDelegate?
     fileprivate var arrowTip = CGPoint.zero
     fileprivate(set) open var preferences: Preferences
-    private let content: Content
+    private var content: Content
     
     // MARK: - Lazy variables -
     
-    fileprivate lazy var contentSize: CGSize = {
-        
-        [unowned self] in
-        
+    fileprivate var contentSize: CGSize  {
         switch content {
         case .text(let text):
             #if swift(>=4.2)
-            var attributes = [NSAttributedString.Key.font : self.preferences.drawing.font]
+            let attributes = [NSAttributedString.Key.font : self.preferences.drawing.font]
             #else
             var attributes = [NSAttributedStringKey.font : self.preferences.drawing.font]
             #endif
@@ -353,19 +350,22 @@ open class EasyTipView: UIView {
         case .view(let contentView):
             return contentView.frame.size
         }
-    }()
+    }
     
-    fileprivate lazy var tipViewSize: CGSize = {
-        
-        [unowned self] in
-        
-        var tipViewSize =
-            CGSize(
-                width: self.contentSize.width + self.preferences.positioning.contentInsets.left + self.preferences.positioning.contentInsets.right + self.preferences.positioning.bubbleInsets.left + self.preferences.positioning.bubbleInsets.right,
-                height: self.contentSize.height + self.preferences.positioning.contentInsets.top + self.preferences.positioning.contentInsets.bottom + self.preferences.positioning.bubbleInsets.top + self.preferences.positioning.bubbleInsets.bottom + self.preferences.drawing.arrowHeight)
-        
+    fileprivate var tipViewSize: CGSize  {
+        let tipViewSize = CGSize(width: self.contentSize.width
+                                        + self.preferences.positioning.contentInsets.left
+                                        + self.preferences.positioning.contentInsets.right
+                                        + self.preferences.positioning.bubbleInsets.left
+                                        + self.preferences.positioning.bubbleInsets.right,
+                                 height: self.contentSize.height
+                                        + self.preferences.positioning.contentInsets.top
+                                        + self.preferences.positioning.contentInsets.bottom
+                                        + self.preferences.positioning.bubbleInsets.top
+                                        + self.preferences.positioning.bubbleInsets.bottom
+                                        + self.preferences.drawing.arrowHeight)
         return tipViewSize
-    }()
+    }
     
     // MARK: - Static variables -
     
@@ -406,6 +406,18 @@ open class EasyTipView: UIView {
         #endif
         
         NotificationCenter.default.addObserver(self, selector: #selector(handleRotation), name: notificationName, object: nil)
+    }
+    
+    public func updateText(_ text: String) {
+        self.accessibilityLabel = text
+        self.content = .text(text)
+        
+        guard
+            let superview = superview
+        else { return }
+        
+        arrange(withinSuperview: superview)
+        self.setNeedsDisplay()
     }
     
     deinit
